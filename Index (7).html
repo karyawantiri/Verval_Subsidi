@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VERVAL Nota</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap">
+<style>
+:root{
+  --accent:#1d4ed8;--accent2:#1e3a8a;--gradient:linear-gradient(135deg,#1e3a8a,#2563eb);
+  --bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#64708a;--line:#dde4ef;--bubble:#dbeafe;
+  --shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(30,58,138,.08);
+  --font-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-title:Manrope,Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:13px;line-height:1.45}
+button,textarea{font:inherit}
+.hidden{display:none!important}
+
+/* Header */
+.header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px max(20px,env(safe-area-inset-right)) 10px max(20px,env(safe-area-inset-left));
+  background:var(--gradient);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.user{font-family:var(--font-title);font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-name{font-family:var(--font-title);font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logo{width:42px;height:42px;flex:0 0 42px;border-radius:22%;display:block;object-fit:cover;box-shadow:0 0 0 2px rgba(255,255,255,.4)}
+
+/* Layout */
+.page{max-width:1500px;margin:0 auto;padding:18px 20px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+.card+.card{margin-top:14px}
+h2,h3{font-family:var(--font-title);margin:0}
+.sub{color:var(--muted);font-size:12px;margin-top:2px}
+.bar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+
+textarea{width:100%;min-height:92px;resize:vertical;border:1px solid var(--line);background:#fff;color:#1f2937;
+  border-radius:10px;padding:11px 12px;outline:none;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:10px 20px;font-weight:700;cursor:pointer;background:var(--gradient);color:#fff}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line);padding:9px 14px}
+.btn.clear{background:linear-gradient(135deg,#dc2626,#f97316);color:#fff}
+.btn.clear:disabled{opacity:.55}
+.status{font-size:12px;color:var(--muted);font-weight:600}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+  font-size:12px;font-weight:700;background:var(--card);white-space:nowrap}
+.pill b{font-size:13px}
+.pill.total{background:var(--bubble);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 25%,white)}
+.pill.ready{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.pill.proc{background:#ffedd5;color:#c2410c;border-color:#fed7aa}
+.pill.fail{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav button.pill{cursor:pointer}
+.nav button.pill:disabled{opacity:.45;cursor:not-allowed}
+.nav .next{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.src{font-size:11px;color:var(--muted);max-width:55vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Detail nota */
+.grid3{display:grid;grid-template-columns:minmax(240px,.9fr) 1fr 1fr;gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.doc{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;min-width:0}
+.doc h4{margin:0;padding:9px 12px;font-size:12px;font-weight:800;background:color-mix(in srgb,var(--bubble) 55%,var(--card));border-bottom:1px solid var(--line)}
+.doc .body{padding:10px}
+.f{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:12px}
+.f:last-child{border:0}.f dt{color:var(--muted);flex:0 0 auto}
+.f dd{margin:0;font-weight:700;text-align:right;word-break:break-word}
+.f dd.nik{font-size:16px;font-weight:800;color:var(--accent);letter-spacing:.02em}
+.imgw{height:34vh;min-height:190px;max-height:340px;display:flex;align-items:center;justify-content:center;background:#f7f8fb;border-radius:8px;overflow:hidden}
+.imgw img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.empty{text-align:center;color:var(--muted);padding:22px}
+.err{border-color:#fecaca;background:#fef2f2;color:#991b1b;padding:16px;border-radius:12px}
+.pdfwrap{min-height:120px;display:flex;align-items:center;justify-content:center}
+
+.imgw.pg{height:60vh;max-height:560px}.imgw.pg+.imgw.pg{margin-top:8px}
+.imgw img{-webkit-user-drag:none}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(10,18,40,.94);display:flex;flex-direction:column}
+.lb-stage{flex:1;min-height:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none}
+.lb-stage img{user-select:none;-webkit-user-drag:none;touch-action:none;cursor:grab;transition:transform .08s linear;border-radius:4px;background:#fff}
+.lb-dock{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 12px calc(12px + env(safe-area-inset-bottom))}
+.lb-title{color:#cbd5e1;font-size:12px;font-weight:600;max-width:90vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-tools{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:8px 10px;border-radius:14px;color:#fff}
+.lb-tools button{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;border-radius:9px;min-width:38px;height:36px;padding:0 12px;font-weight:700;cursor:pointer}
+.lb-tools button:hover{background:rgba(255,255,255,.24)}
+.lb-tools .sep{width:1px;height:22px;background:rgba(255,255,255,.25)}
+#lbPct{min-width:46px;text-align:center;font-size:12px;font-weight:700}
+@media(max-width:1100px){.grid3{grid-template-columns:1fr 1fr}.grid3>.doc:first-child{grid-column:1/-1}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.page{padding:12px}.header{padding:9px 14px}.grid3,.grid2{grid-template-columns:1fr}.grid3>.doc:first-child{grid-column:auto}
+  .imgw{height:260px}.src{max-width:100%}.bar{flex-direction:column}.logo{width:34px;height:34px;flex-basis:34px}.user,.brand-name{font-size:13px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="user">Joko Winarno</div>
+  <div class="brand">
+    <img class="logo" alt="Logo" src="data:image/png;base64,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">
+    <div class="brand-name" id="brandName">Karyawan Tiri</div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="card">
+    <div class="bar">
+      <div>
+        <h2 style="font-size:17px">Verval Nota</h2>
+        <div class="sub">Tempel link nota, klik Proses, lalu periksa satu per satu.</div>
+      </div>
+    </div>
+    <textarea id="vervalLinkInput" placeholder="Tempel satu atau beberapa link nota, satu link per baris"></textarea>
+    <div class="row">
+      <button id="vervalProcessBtn" class="btn" type="button" onclick="vervalStart()">Proses</button>
+      <button id="vervalClearBtn" class="btn clear" type="button" onclick="vervalClear()">Bersihkan</button>
+      <span id="vervalStatus" class="status">Siap menerima link.</span>
+    </div>
+    <div class="pills">
+      <span class="pill total"><b id="vvTotal">0</b> link</span>
+      <span class="pill ready"><b id="vvReady">0</b> siap</span>
+      <span class="pill proc"><b id="vvProcess">0</b> diproses</span>
+      <span class="pill fail"><b id="vvFail">0</b> gagal</span>
+    </div>
+  </section>
+
+  <section id="vervalDetailPanel" class="card hidden">
+    <div class="bar">
+      <div style="min-width:0"><h3 style="font-size:15px">Detail Nota</h3><div id="vervalDetailUrl" class="src"></div></div>
+      <div class="nav">
+        <button id="vervalPrevBtn" class="pill" type="button" onclick="vervalPrev()">‹ Sebelum</button>
+        <span id="vervalDetailCounter" class="pill total">0 / 0</span>
+        <button id="vervalNextBtn" class="pill next" type="button" onclick="vervalNext()">Sesudah ›</button>
+        <button class="pill" type="button" onclick="vervalOpenSource()">Buka sumber</button>
+      </div>
+    </div>
+    <div id="vervalDetailBody"></div>
+  </section>
+</main>
+
+<div id="lb" class="lb hidden" role="dialog" aria-label="Pembesar gambar">
+  <div id="lbStage" class="lb-stage"><img id="lbImg" alt="" draggable="false"></div>
+  <div class="lb-dock">
+    <div id="lbTitle" class="lb-title"></div>
+    <div class="lb-tools">
+      <button type="button" onclick="lbRotate(-90)" title="Putar ke kiri (L)">↺ Kiri</button>
+      <button type="button" onclick="lbRotate(90)" title="Putar ke kanan (R)">Kanan ↻</button>
+      <button type="button" onclick="lbRotate(180)" title="Balik 180°">180°</button>
+      <span class="sep"></span>
+      <button type="button" onclick="lbZoom(.8)" title="Perkecil">−</button>
+      <span id="lbPct">100%</span>
+      <button type="button" onclick="lbZoom(1.25)" title="Perbesar">+</button>
+      <span class="sep"></span>
+      <button type="button" onclick="lbReset()">Reset</button>
+      <button type="button" onclick="lbClose()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+
+/* ================= VERVAL ================= */
+let vervalResults=[], vervalUrls=[], vervalCursor=0, vervalRunning=false, vervalRunId=0;
+const VERVAL_FIRST_CHUNK=3, VERVAL_CHUNK=12, VERVAL_WORKERS=4, VERVAL_IMG_CONCURRENCY=8, VERVAL_IMG_AHEAD=20;
+const vervalNotaCache=new Map(), vervalImgState=new Map(), vervalImgRefs=new Map();
+let vervalImgActive=0;
+const $=id=>document.getElementById(id);
+
+function toast(m){ $('vervalStatus').textContent=m; }
+function vervalSetStatus(m){ $('vervalStatus').textContent=m; }
+
+function vervalParseUrls(){
+  const raw=$('vervalLinkInput').value||'';
+  const matches=raw.match(/https:\/\/(?:ext-ipubers\.rms-pi\.com|ipubers\.pupuk-indonesia\.com)\/public\/download\/bukti-transaksi\/V2[^\s\]\)\|<>]*/gi)||[];
+  return [...new Set(matches.map(x=>x.replace(/\\&/g,'&').replace(/[.,;]+$/,'')))];
+}
+function vervalUpdateInputCount(){
+  if(vervalRunning) return;
+  $('vvTotal').textContent=vervalParseUrls().length;
+  ['vvReady','vvProcess','vvFail'].forEach(i=>$(i).textContent=0);
+}
+function vervalClear(){
+  if(vervalRunning) return;
+  vervalRunId++;
+  $('vervalLinkInput').value='';
+  vervalResults=[]; vervalUrls=[]; vervalCursor=0;
+  $('vervalDetailPanel').classList.add('hidden');
+  vervalSetStatus('Siap menerima link.');
+  vervalUpdateInputCount();
+}
+function vervalSetBtn(running){
+  const b=$('vervalProcessBtn'); b.disabled=running;
+  b.textContent=running?'Memproses…':'Proses lagi';
+}
+
+function vervalStart(){
+  if(vervalRunning) return;
+  vervalLoadPdfJs().catch(()=>{});
+  vervalUrls=vervalParseUrls();
+  if(!vervalUrls.length){ vervalSetStatus('Masukkan minimal satu link nota.'); return; }
+  vervalResults=vervalUrls.map(url=>{
+    const c=vervalNotaCache.get(url);
+    return c?{url,status:'ok',data:c,message:''}:{url,status:'waiting',data:null,message:''};
+  });
+  vervalCursor=0;
+  $('vervalDetailPanel').classList.add('hidden');
+  [...vervalImgState].forEach(([u,s])=>{ if(s==='error') vervalImgState.delete(u); });
+  const need=[]; vervalResults.forEach((x,i)=>{ if(x.status==='waiting') need.push(i); });
+  vervalFetchIndices(need);
+}
+
+function vervalFetchIndices(indices){
+  vervalRunning=true;
+  const runId=++vervalRunId;
+  vervalSetBtn(true); vervalUpdateProgress();
+
+  const chunks=[]; let p=Math.min(VERVAL_FIRST_CHUNK,indices.length);
+  if(p) chunks.push(indices.slice(0,p));
+  while(p<indices.length){ chunks.push(indices.slice(p,p+VERVAL_CHUNK)); p+=VERVAL_CHUNK; }
+
+  let next=0, active=0;
+  let started=vervalResults.length>0 && !$('vervalDetailPanel').classList.contains('hidden');
+  const count=st=>vervalResults.filter(x=>x.status===st).length;
+
+  const finish=()=>{
+    vervalRunning=false; vervalSetBtn(false); vervalUpdateProgress();
+    if(!started && vervalResults.length) vervalShowDetail(0);
+    vervalPumpImages(); vervalImgProgress();
+  };
+  const afterChunk=idxs=>{
+    vervalUpdateProgress();
+    if(!started){
+      const f=vervalResults.findIndex(x=>x.status==='ok');
+      if(f>=0){ started=true; vervalShowDetail(f); }
+    } else if(idxs.indexOf(vervalCursor)>=0) vervalShowDetail(vervalCursor);
+    vervalPumpImages();
+    vervalSetStatus('Memuat nota… '+count('ok')+'/'+vervalResults.length+' siap. Sudah bisa klik Sesudah.');
+  };
+  const launch=()=>{
+    if(runId!==vervalRunId) return;
+    if(next>=chunks.length){ if(active===0) finish(); return; }
+    const idxs=chunks[next++]; active++;
+    google.script.run
+      .withSuccessHandler(resp=>{
+        active--; if(runId!==vervalRunId) return;
+        ((resp&&resp.results)||[]).forEach(r=>{
+          const item=vervalResults[idxs[Number(r.index)]]; if(!item) return;
+          if(r.ok){
+            try{
+              item.data=vervalParseNotaHtml(r.html||'',r.url||item.url);
+              item.status='ok'; item.message='';
+              vervalNotaCache.set(item.url,item.data);
+            }catch(e){ item.status='error'; item.message='Gagal membaca isi nota: '+(e&&e.message?e.message:e); }
+          }else{ item.status='error'; item.message=r.message||('Gagal mengambil nota. HTTP '+(r.status||'-')); }
+        });
+        idxs.forEach(gi=>{ const it=vervalResults[gi]; if(it&&it.status==='waiting'){ it.status='error'; it.message='Tidak ada respons dari server.'; }});
+        afterChunk(idxs); launch();
+      })
+      .withFailureHandler(err=>{
+        active--; if(runId!==vervalRunId) return;
+        idxs.forEach(gi=>{ const it=vervalResults[gi]; if(it&&it.status==='waiting'){ it.status='error'; it.message='Apps Script gagal: '+(err&&err.message?err.message:String(err)); }});
+        afterChunk(idxs); launch();
+      })
+      .fetchVervalAll(idxs.map(i=>vervalUrls[i]));
+  };
+  if(!chunks.length){ finish(); return; }
+  for(let w=0;w<Math.min(VERVAL_WORKERS,chunks.length);w++) launch();
+}
+
+/* Preload gambar: nota sekarang dan beberapa nota ke depan */
+function vervalImageUrlsOf(item){
+  const d=(item&&item.data)||{};
+  return [
+    d.ktpPembeli||d.ktpPenebusanKelompok, d.buktiPenyaluran&&d.buktiPenyaluran[0],
+    d.ktpPemilik, d.ktpPerwakilanFoto, d.swafoto, d.buktiBedaKtp,
+    ...((d.dokumenLain||[]).slice(0,4).map(x=>x&&x.url))
+  ].filter(Boolean);
+}
+function vervalPumpImages(){
+  const n=vervalResults.length; if(!n) return;
+  const order=[], seen=new Set(), offs=[0,1,2,-1];
+  for(let k=3;k<=VERVAL_IMG_AHEAD;k++) offs.push(k);
+  offs.forEach(o=>{
+    if(o>=n||o<=-n) return;
+    const idx=(vervalCursor+o+n)%n;
+    if(!seen.has(idx)){ seen.add(idx); order.push({idx,dist:Math.abs(o)}); }
+  });
+  while(vervalImgActive<VERVAL_IMG_CONCURRENCY){
+    let pick=null, dist=0;
+    for(const o of order){
+      const item=vervalResults[o.idx]; if(!item||item.status!=='ok') continue;
+      const u=vervalImageUrlsOf(item).find(x=>!vervalImgState.has(x));
+      if(u){ pick=u; dist=o.dist; break; }
+    }
+    if(!pick) break;
+    vervalImgState.set(pick,'loading'); vervalImgActive++;
+    const im=new Image(); vervalImgRefs.set(pick,im);
+    const done=st=>{ vervalImgState.set(pick,st); vervalImgActive--; vervalImgProgress(); vervalPumpImages(); };
+    im.onload=()=>{ if(dist<=2&&im.decode) im.decode().catch(()=>{}); done('done'); };
+    im.onerror=()=>done('error');
+    im.decoding='async'; im.src=pick;
+  }
+}
+function vervalPruneImages(){
+  vervalResults.forEach((item,idx)=>{
+    const behind=vervalCursor-idx, ahead=idx-vervalCursor;
+    if(behind>5||ahead>VERVAL_IMG_AHEAD+5) vervalImageUrlsOf(item).forEach(u=>vervalImgRefs.delete(u));
+  });
+}
+function vervalImgProgress(){
+  if(vervalRunning) return;
+  let total=0, done=0, ok=0, fail=0;
+  vervalResults.forEach(it=>{
+    if(it.status==='ok'){ ok++; vervalImageUrlsOf(it).forEach(u=>{ total++; const s=vervalImgState.get(u); if(s==='done'||s==='error') done++; }); }
+    else if(it.status==='error') fail++;
+  });
+  const f=fail?(' • '+fail+' nota gagal'):'';
+  vervalSetStatus(done>=total?'Selesai. '+ok+' nota siap, semua gambar sudah dimuat'+f+'.':ok+' nota siap • gambar dimuat '+done+'/'+total+f+'.');
+}
+function vervalUpdateProgress(){
+  const c=st=>vervalResults.filter(x=>x.status===st).length;
+  $('vvTotal').textContent=vervalResults.length;
+  $('vvReady').textContent=c('ok');
+  $('vvProcess').textContent=vervalRunning?c('waiting'):0;
+  $('vvFail').textContent=c('error');
+}
+function vervalRetryOne(i){
+  const it=vervalResults[i]; if(!it) return;
+  if(vervalRunning){ vervalSetStatus('Tunggu proses yang berjalan selesai dulu.'); return; }
+  vervalNotaCache.delete(it.url); it.status='waiting'; it.message='';
+  vervalShowDetail(i); vervalFetchIndices([i]);
+}
+document.addEventListener('keydown',e=>{
+  if(lb.open||!vervalResults.length||/^(INPUT|TEXTAREA|SELECT)$/.test((e.target&&e.target.tagName)||'')||e.ctrlKey||e.metaKey||e.altKey) return;
+  if($('vervalDetailPanel').classList.contains('hidden')) return;
+  if(e.key==='ArrowRight'){ e.preventDefault(); vervalNext(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); vervalPrev(); }
+});
+
+/* ---------- Parser nota (tidak diubah dari versi asli) ---------- */
+function vervalParseNotaHtml(html,sourceUrl){
+  const doc=new DOMParser().parseFromString(html||'','text/html');
+  const data={namaKios:null,kodeKios:null,namaPetani:null,nikPetani:null,kodeTransaksi:null,tanggalTransaksi:null,
+    jenisPenyaluran:null,namaPerwakilan:null,nikPerwakilan:null,poktan:null,komoditas:null,produk:null,volume:null,
+    harga:null,jumlah:null,ktpPembeli:null,buktiPenyaluran:[],ktpPemilik:null,ktpPerwakilanFoto:null,swafoto:null,
+    ktpPenebusanKelompok:null,buktiBedaKtp:null,dokumenLain:[],pdfs:[],sourceUrl};
+  const absolute=src=>{ if(!src) return null; try{ return new URL(src,sourceUrl).href; }catch(e){ return src; } };
+
+  const labelMap={};
+  doc.querySelectorAll('tr').forEach(tr=>{
+    const tds=tr.querySelectorAll('td');
+    if(tds.length===2){ const l=tds[0].textContent.trim().toLowerCase(); if(l) labelMap[l]=tds[1].textContent.trim(); }
+  });
+  data.namaPetani=labelMap['nama petani']||null;
+  data.nikPetani=labelMap['ktp petani']||labelMap['nik petani']||null;
+  data.poktan=labelMap['poktan']||null;
+  data.komoditas=labelMap['komoditas']||null;
+  data.namaPerwakilan=labelMap['nama perwakilan']||null;
+  data.nikPerwakilan=labelMap['ktp perwakilan']||labelMap['nik perwakilan']||null;
+
+  const txRows=[...doc.querySelectorAll('.info-transaksi tr')];
+  txRows.forEach((tr,idx)=>{
+    const txt=tr.textContent.trim(); if(!txt) return;
+    if(/^No Transaksi$/i.test(txt)&&txRows[idx+1]) data.kodeTransaksi=txRows[idx+1].textContent.trim();
+    if(/^Tanggal Transaksi$/i.test(txt)&&txRows[idx+1]) data.tanggalTransaksi=txRows[idx+1].textContent.trim();
+    if(/^Jenis Transaksi$/i.test(txt)&&txRows[idx+1]) data.jenisPenyaluran=txRows[idx+1].textContent.trim();
+  });
+  if(!data.kodeTransaksi||!data.jenisPenyaluran){
+    const b=[...doc.querySelectorAll('td.f-20.f-bold.align-right')].map(td=>td.textContent.trim()).filter(Boolean);
+    if(!data.kodeTransaksi) data.kodeTransaksi=b[0]||null;
+    if(!data.tanggalTransaksi) data.tanggalTransaksi=b[1]||null;
+    if(!data.jenisPenyaluran) data.jenisPenyaluran=b[2]||null;
+  }
+
+  const bigDivs=[...doc.querySelectorAll('div[style*="font-size:19"], div[style*="font-size: 19"]')];
+  if(bigDivs[0]) data.namaKios=bigDivs[0].textContent.trim();
+  const boldEls=[...doc.querySelectorAll('b font, b')].map(e=>e.textContent.trim()).filter(t=>t&&t.length<40);
+  const kk=boldEls.find(t=>/^RT\d+/.test(t)); if(kk) data.kodeKios=kk;
+
+  const productRow=doc.querySelector('.table-produk tbody tr');
+  if(productRow){
+    const c=[...productRow.querySelectorAll('td')].map(td=>td.textContent.trim());
+    if(c.length>=5){ data.produk=c[1]||null; data.volume=c[2]||null; data.harga=c[3]||null; data.jumlah=c[4]||null; }
+  }
+
+  const imgs=[...doc.querySelectorAll('img')], seenKtp=[];
+  const bedaKtpSrcs=new Set(); let lastTitle='';
+  [...doc.querySelectorAll('.title-doc, img')].forEach(el=>{
+    if(el.classList&&el.classList.contains('title-doc')){ lastTitle=el.textContent.trim(); return; }
+    if(/beda\s*ktp/i.test(lastTitle)){ const s=absolute(el.getAttribute('src')||''); if(s) bedaKtpSrcs.add(s); }
+    lastTitle='';
+  });
+  imgs.forEach(img=>{
+    const srcRaw=img.getAttribute('src')||''; const src=absolute(srcRaw);
+    if(!src||/TANDA_TANGAN/i.test(srcRaw)) return;
+    if(bedaKtpSrcs.has(src)||/beda_?ktp%2F/i.test(srcRaw)){ data.buktiBedaKtp=src; return; }
+    if(/ktp_penerima%2F/i.test(srcRaw)) data.ktpPemilik=src;
+    else if(/perwakilan%2Fktp%2F/i.test(srcRaw)) data.ktpPerwakilanFoto=src;
+    else if(/perwakilan%2Fswafoto%2F/i.test(srcRaw)) data.swafoto=src;
+    else if(/penjualan%2Fktp%2F/i.test(srcRaw)) data.ktpPenebusanKelompok=src;
+    else if(/dokumen_lain%2F/i.test(srcRaw)){
+      const t=img.closest('div')?.querySelector('.title-doc');
+      data.dokumenLain.push({title:t?t.textContent.trim():'Dokumen lain',url:src});
+    }
+    else if(/petani_barang%2F/i.test(srcRaw)) data.buktiPenyaluran.push(src);
+    else if(/[^_]ktp%2F/i.test(srcRaw)) seenKtp.push(src);
+  });
+  if(seenKtp[0]) data.ktpPembeli=seenKtp[0];
+  if(seenKtp[1]&&!data.ktpPemilik) data.ktpPemilik=seenKtp[1];
+
+  const seenPdf=new Set();
+  doc.querySelectorAll('iframe[src], embed[src], object[data], a[href]').forEach(el=>{
+    const src=el.getAttribute('src')||el.getAttribute('data')||el.getAttribute('href')||'';
+    if(!src) return;
+    const isLink=el.tagName.toLowerCase()==='a';
+    const ctx=((el.textContent||'')+' '+(el.parentElement?el.parentElement.textContent:'')).replace(/\s+/g,' ').toLowerCase();
+    const isSk=/surat\s*kuasa|surat_kuasa|surat-kuasa/.test(ctx+' '+src.toLowerCase());
+    const isPdf=/\.pdf(?:$|[?#%])|pdf/i.test(src);
+    if(!(isPdf||(isSk&&!isLink))) return;
+    const u=absolute(src); if(!u||seenPdf.has(u)) return; seenPdf.add(u);
+    const t=el.closest('div')?.querySelector('.title-doc');
+    data.pdfs.push({title:(t&&t.textContent.trim())?t.textContent.trim():(isSk?'Surat Kuasa':'Dokumen PDF'),url:u});
+  });
+  return data;
+}
+
+/* ---------- Tampilan detail ---------- */
+function vervalShowDetail(i){
+  if(i<0||i>=vervalResults.length) return;
+  vervalCursor=i;
+  const item=vervalResults[i];
+  $('vervalDetailPanel').classList.remove('hidden');
+  $('vervalDetailCounter').textContent=(i+1)+' / '+vervalResults.length;
+  $('vervalDetailUrl').textContent=(item.data&&(item.data.namaKios||item.data.namaPetani))?((item.data.namaKios||'-')+' • '+(item.data.namaPetani||'-')):item.url;
+  $('vervalPrevBtn').disabled=$('vervalNextBtn').disabled=vervalResults.length<2;
+
+  if(item.status==='error'){
+    $('vervalDetailBody').innerHTML='<div class="err"><b>Nota gagal diambil.</b><p style="margin:6px 0 10px">'+esc(item.message)+'</p><button class="btn" onclick="vervalRetryOne('+i+')">Ulangi</button></div>';
+    return;
+  }
+  if(item.status!=='ok'){ $('vervalDetailBody').innerHTML='<div class="empty">Nota sedang diproses…</div>'; return; }
+
+  const d=item.data||{};
+  const field=(l,v,c)=>'<div class="f"><dt>'+esc(l)+'</dt><dd class="'+(c||'')+'">'+(v?esc(v):'—')+'</dd></div>';
+  const img=(title,src)=>{
+    const u=String(src||'').trim(); if(!u) return '';
+    return '<div class="doc"><h4>'+esc(title)+'</h4><div class="body"><div class="imgw"><img src="'+esc(u)+'" alt="'+esc(title)+'" decoding="async" title="Klik untuk memperbesar" onclick="lbOpen(this.src,this.alt)" onerror="this.parentElement.innerHTML=\'<div class=empty>Gambar tidak dapat dimuat</div>\'"></div></div></div>';
+  };
+  const pdfCard=p=>'<div class="doc"><h4>'+esc(p.title)+'</h4><div class="body"><div class="pdfhost" data-u="'+esc(p.url)+'" data-t="'+esc(p.title)+'"><div class="empty">Mengubah PDF menjadi gambar…</div></div></div></div>';
+
+  const admin='<div class="doc"><h4>Data Transaksi</h4><div class="body">'+
+    field('No. Transaksi',d.kodeTransaksi)+field('Tanggal',d.tanggalTransaksi)+field('Kios',d.namaKios)+field('Kode Kios',d.kodeKios)+
+    field('Penyaluran',d.jenisPenyaluran)+field('Nama Petani',d.namaPetani)+field('NIK Petani',d.nikPetani,'nik')+field('Poktan',d.poktan)+
+    field('Komoditas',d.komoditas)+field('Produk',d.produk)+field('Volume',d.volume)+field('Harga',d.harga)+field('Jumlah',d.jumlah)+
+    field('Perwakilan',d.namaPerwakilan)+field('NIK Perwakilan',d.nikPerwakilan,'nik')+'</div></div>';
+
+  const fotoKtp=d.ktpPembeli||d.ktpPenebusanKelompok, fotoPetani=d.buktiPenyaluran&&d.buktiPenyaluran[0];
+  const sec=[];
+  if(d.ktpPemilik) sec.push(img('KTP Pemilik',d.ktpPemilik));
+  if(d.ktpPerwakilanFoto) sec.push(img('KTP Perwakilan',d.ktpPerwakilanFoto));
+  if(d.swafoto) sec.push(img('Swafoto Perwakilan',d.swafoto));
+  if(d.buktiBedaKtp) sec.push(img('Bukti Beda KTP',d.buktiBedaKtp));
+  (d.pdfs||[]).forEach(p=>sec.push(pdfCard(p)));
+  (d.dokumenLain||[]).slice(0,4).forEach(x=>{ if(x&&x.url) sec.push(img(x.title||'Dokumen Lain',x.url)); });
+
+  $('vervalDetailBody').innerHTML=
+    '<div class="grid3">'+admin+img(d.ktpPembeli?'KTP Pembeli':'KTP Pembeli / Penebusan Kelompok',fotoKtp)+img('Foto / Bukti Penyaluran Petani',fotoPetani)+'</div>'+
+    (sec.length?'<div class="grid2">'+sec.join('')+'</div>':'');
+  $('vervalDetailBody').querySelectorAll('.pdfhost').forEach(vervalFillPdf);
+  for(let k=1;k<=3&&k<vervalResults.length;k++){
+    const nx=vervalResults[(i+k)%vervalResults.length];
+    if(nx&&nx!==item&&nx.status==='ok'&&nx.data) (nx.data.pdfs||[]).forEach(p=>vervalPdfToJpg(p.url).catch(()=>{}));
+  }
+  vervalPruneImages(); vervalPumpImages();
+}
+function vervalPrev(){ if(!vervalResults.length) return; let i=vervalCursor-1; if(i<0) i=vervalResults.length-1; vervalShowDetail(i); }
+function vervalNext(){ if(!vervalResults.length) return; let i=vervalCursor+1; if(i>=vervalResults.length) i=0; vervalShowDetail(i); }
+function vervalOpenSource(){ const it=vervalResults[vervalCursor]; if(it) window.open(it.url,'_blank','noopener'); }
+
+/* ================= Pembesar gambar ================= */
+let lb={s:1,x:0,y:0,r:0,open:false}; const lbPtr=new Map(); let lbPinch=0, lbMoved=false;
+function lbFit(){
+  const st=$('lbStage'), im=$('lbImg'), r=st.getBoundingClientRect(), w=r.width*.94, h=r.height*.94, sw=lb.r%180!==0;
+  im.style.maxWidth=(sw?h:w)+'px'; im.style.maxHeight=(sw?w:h)+'px';
+}
+function lbApply(){ $('lbImg').style.transform='translate('+lb.x+'px,'+lb.y+'px) scale('+lb.s+') rotate('+lb.r+'deg)'; $('lbPct').textContent=Math.round(lb.s*100)+'%'; }
+function lbOpen(src,title){ if(!src) return; lb={s:1,x:0,y:0,r:0,open:true}; $('lbTitle').textContent=title||''; $('lb').classList.remove('hidden'); lbFit(); $('lbImg').src=src; lbApply(); }
+function lbClose(){ lb.open=false; $('lb').classList.add('hidden'); $('lbImg').removeAttribute('src'); }
+function lbReset(){ lb.s=1; lb.x=0; lb.y=0; lb.r=0; lbFit(); lbApply(); }
+function lbRotate(d){ lb.r=((lb.r+d)%360+360)%360; lb.x=0; lb.y=0; lbFit(); lbApply(); }
+function lbZoom(f,px,py){
+  const ns=Math.min(8,Math.max(.5,lb.s*f)), k=ns/lb.s; px=px||0; py=py||0;
+  lb.x=px-(px-lb.x)*k; lb.y=py-(py-lb.y)*k; lb.s=ns; if(ns<=1){ lb.x=0; lb.y=0; } lbApply();
+}
+window.addEventListener('resize',()=>{ if(lb.open) lbFit(); });
+(function(){
+  const st=$('lbStage');
+  const rel=e=>{ const r=st.getBoundingClientRect(); return [e.clientX-(r.left+r.width/2), e.clientY-(r.top+r.height/2)]; };
+  st.addEventListener('wheel',e=>{ e.preventDefault(); const [x,y]=rel(e); lbZoom(e.deltaY<0?1.15:1/1.15,x,y); },{passive:false});
+  st.addEventListener('dblclick',e=>{ if(lb.s>1) lbReset(); else { const [x,y]=rel(e); lbZoom(2.5,x,y); } });
+  st.addEventListener('pointerdown',e=>{ lbPtr.set(e.pointerId,[e.clientX,e.clientY]); lbMoved=false; lbPinch=0; try{ st.setPointerCapture(e.pointerId); }catch(_){} });
+  st.addEventListener('pointermove',e=>{
+    if(!lbPtr.has(e.pointerId)) return;
+    const prev=lbPtr.get(e.pointerId); lbPtr.set(e.pointerId,[e.clientX,e.clientY]);
+    if(lbPtr.size===2){
+      const [a,b]=[...lbPtr.values()], d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+      if(lbPinch){ const r=st.getBoundingClientRect(); lbZoom(d/lbPinch,(a[0]+b[0])/2-(r.left+r.width/2),(a[1]+b[1])/2-(r.top+r.height/2)); }
+      lbPinch=d; lbMoved=true;
+    }else if(lb.s>1){ lb.x+=e.clientX-prev[0]; lb.y+=e.clientY-prev[1]; lbMoved=true; lbApply(); }
+  });
+  const up=e=>{ lbPtr.delete(e.pointerId); lbPinch=0; if(!lbPtr.size && !lbMoved && e.target===st) lbClose(); };
+  st.addEventListener('pointerup',up); st.addEventListener('pointercancel',up);
+})();
+document.addEventListener('keydown',e=>{
+  if(!lb.open) return;
+  if(e.key==='Escape') lbClose();
+  else if(e.key==='+'||e.key==='=') lbZoom(1.25);
+  else if(e.key==='-') lbZoom(.8);
+  else if(e.key==='0') lbReset();
+  else if(e.key==='r'||e.key==='R') lbRotate(90);
+  else if(e.key==='l'||e.key==='L') lbRotate(-90);
+});
+
+/* ================= PDF -> JPG (tanpa jendela baru) ================= */
+const pdfJpgCache=new Map(); let pdfJsReady=null;
+function vervalLoadPdfJs(){
+  if(pdfJsReady) return pdfJsReady;
+  const B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  pdfJsReady=new Promise((res,rej)=>{
+    const sc=document.createElement('script'); sc.src=B+'pdf.min.js';
+    sc.onload=async()=>{
+      try{
+        const t=await (await fetch(B+'pdf.worker.min.js')).text();
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));
+      }catch(e){ window.pdfjsLib.GlobalWorkerOptions.workerSrc=B+'pdf.worker.min.js'; }
+      res(window.pdfjsLib);
+    };
+    sc.onerror=()=>{ pdfJsReady=null; rej(new Error('Pustaka PDF tidak dapat dimuat.')); };
+    document.head.appendChild(sc);
+  });
+  return pdfJsReady;
+}
+function vervalPdfToJpg(url){
+  if(pdfJpgCache.has(url)) return pdfJpgCache.get(url);
+  const p=new Promise((res,rej)=>{
+    google.script.run
+      .withSuccessHandler(async r=>{
+        if(!r||!r.ok){ rej(new Error((r&&r.message)||'PDF gagal diambil.')); return; }
+        try{
+          const lib=await vervalLoadPdfJs();
+          const bin=atob(r.base64), bytes=new Uint8Array(bin.length);
+          for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+          const pdf=await lib.getDocument({data:bytes}).promise;
+          const total=pdf.numPages, last=Math.min(total,4);
+          const renderPage=async k=>{
+            const page=await pdf.getPage(k);
+            const w0=page.getViewport({scale:1}).width;
+            const vp=page.getViewport({scale:Math.min(2,1300/w0)});
+            const c=document.createElement('canvas'); c.width=Math.round(vp.width); c.height=Math.round(vp.height);
+            const ctx=c.getContext('2d',{alpha:false}); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height);
+            await page.render({canvasContext:ctx,viewport:vp}).promise;
+            const out=c.toDataURL('image/jpeg',0.85); c.width=c.height=0; return out;
+          };
+          const first=await renderPage(1);              // halaman 1 tampil lebih dulu
+          const more=(async()=>{ const o=[]; for(let k=2;k<=last;k++) o.push(await renderPage(k)); return o; })();
+          more.catch(()=>{});
+          res({pages:[first],total,more});
+        }catch(e){ rej(e); }
+      })
+      .withFailureHandler(e=>rej(new Error(e&&e.message?e.message:String(e))))
+      .fetchVervalPdf(url);
+  });
+  p.catch(()=>pdfJpgCache.delete(url));
+  pdfJpgCache.set(url,p);
+  return p;
+}
+function vervalFillPdf(host){
+  const url=host.dataset.u, title=host.dataset.t||'Dokumen', card=host.closest('.doc');
+  const addPage=(src,label)=>{
+    const w=document.createElement('div'); w.className='imgw pg';
+    const im=document.createElement('img'); im.src=src; im.alt=label; im.title='Klik untuk memperbesar';
+    im.onclick=()=>lbOpen(im.src,im.alt); w.appendChild(im); host.appendChild(w);
+  };
+  vervalPdfToJpg(url).then(r=>{
+    if(!host.isConnected) return;
+    host.innerHTML='';
+    addPage(r.pages[0],title+(r.total>1?' hal. 1':''));
+    r.more.then(rest=>{
+      if(!host.isConnected) return;
+      rest.forEach((src,i)=>addPage(src,title+' hal. '+(i+2)));
+      if(r.total>1+rest.length){ const n=document.createElement('div'); n.className='sub'; n.style.marginTop='6px'; n.textContent='Menampilkan '+(1+rest.length)+' dari '+r.total+' halaman.'; host.appendChild(n); }
+    }).catch(()=>{});
+  }).catch(()=>{ if(card&&card.isConnected) card.remove(); });   // gagal: kartu disembunyikan tanpa pesan error
+}
+
+$('vervalLinkInput').addEventListener('input',vervalUpdateInputCount);
+setTimeout(()=>vervalLoadPdfJs().catch(()=>{}),1200);
+</script>
+</body>
+</html>
